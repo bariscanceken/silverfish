@@ -15,6 +15,8 @@ from pathlib import Path
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 
+from .reflow import HARD_BREAK
+
 log = logging.getLogger(__name__)
 
 SUPPORTED_SUFFIXES = {".txt", ".md", ".pdf"}
@@ -65,6 +67,10 @@ def read_text_file(path: Path) -> str:
 
 
 _MD_RULES: list[tuple[re.Pattern[str], str]] = [
+    # Hard line break: 2+ trailing spaces or a trailing "\" after some text.
+    # Must run first, before anything strips trailing whitespace. "\r?" because
+    # this runs before CRLF normalization.
+    (re.compile(r"(?<=\S)(?: {2,}|\\)(?=\r?$)", re.MULTILINE), HARD_BREAK),
     (re.compile(r"^```.*$", re.MULTILINE), ""),  # code fence lines, keep the code
     (re.compile(r"!\[([^\]]*)\]\([^)]*\)"), r"\1"),  # images -> alt text
     (re.compile(r"\[([^\]]+)\]\([^)]*\)"), r"\1"),  # links -> link text
@@ -151,7 +157,7 @@ def read_pdf(path: Path) -> str:
 
 def normalize(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n").replace("\t", "    ")
-    text = "".join(ch for ch in text if ch == "\n" or ch.isprintable())
+    text = "".join(ch for ch in text if ch in ("\n", HARD_BREAK) or ch.isprintable())
     lines = [line.rstrip() for line in text.split("\n")]
     text = "\n".join(lines)
     text = re.sub(r"\n{3,}", "\n\n", text)
