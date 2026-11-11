@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "silverfish_mclibrary",
+	"version": "${version}",
+	"name": "silverfish-mclibrary",
+	"description": "Turns documents on your computer into written books in a chest named \"Kabul\".",
+	"authors": ["Barışcan Çeken"],
+	"license": "MIT",
+	"icon": "assets/silverfish_mclibrary/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.silverfish.mclibrary.SilverfishMod"],
+		"client": ["com.silverfish.mclibrary.client.SilverfishModClient"]
+	},
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
