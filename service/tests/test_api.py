@@ -55,6 +55,7 @@ def test_end_to_end_flow(client, library):
     assert book["author"] == "Ayşe"
     assert book["pages"] == ["Bir varmış, bir yokmuş."]
     assert book["id"] == volume_id("Bir varmış, bir yokmuş.", 1)
+    assert book["source"] == "Masal.txt"
 
     # 2) confirm -> next plan is empty, state file written
     assert onay(client, [book["id"]]) == {"accepted": 1, "already_delivered": 0}
@@ -97,6 +98,12 @@ def test_partial_confirmation_of_volumes(client, library):
     onay(client, [books[0]["id"], books[1]["id"]])
     remaining = plan(client)["books"]
     assert [b["title"] for b in remaining] == ["Roman (3/3)"]
+
+
+def test_source_is_relative_posix_path(client, library):
+    (library / "alt klasör").mkdir()
+    (library / "alt klasör" / "Şiir.md").write_text("dize", encoding="utf-8")
+    assert plan(client)["books"][0]["source"] == "alt klasör/Şiir.md"
 
 
 def test_duplicate_content_offered_once(client, library):

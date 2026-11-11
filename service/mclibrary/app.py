@@ -41,6 +41,7 @@ class BookOut(BaseModel):
     title: str
     author: str
     pages: list[str]
+    source: str  # file path relative to LIBRARY_DIR, e.g. "alt/ornek.txt"
 
 
 class SkippedOut(BaseModel):
@@ -88,7 +89,8 @@ def build_plan(documents: list[Document], skipped: list[SkippedFile], author: st
             if vid in delivered or vid in seen:
                 continue
             seen.add(vid)
-            books.append(BookOut(id=vid, title=vol.title, author=author, pages=vol.pages))
+            books.append(BookOut(id=vid, title=vol.title, author=author, pages=vol.pages,
+                                 source=doc.path.as_posix()))
     return Plan(books, skipped)
 
 

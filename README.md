@@ -34,7 +34,7 @@ denenebileceği sayfa: <http://127.0.0.1:8765/docs>.
 | Uç nokta | Ne yapar |
 |---|---|
 | `GET /saglik` | `{"status": "ok", "library_dir": "...", "library_dir_exists": true}` |
-| `POST /plan` | Henüz teslim edilmemiş ciltler ve atlanan dosyalar: `{"books": [{"id", "title", "author", "pages"}], "skipped": [{"file", "reason"}]}` |
+| `POST /plan` | Henüz teslim edilmemiş ciltler ve atlanan dosyalar: `{"books": [{"id", "title", "author", "pages", "source"}], "skipped": [{"file", "reason"}]}` |
 | `POST /onay` | Gövde: `{"ids": ["..."]}`. Sandığa konan ciltleri kaydeder. Yanıt: `{"accepted": n, "already_delivered": m}` |
 
 - **Cilt id'si:** çıkarılan metnin SHA-256 özetinin ilk 16 karakteri, ardından `-` ve cilt
