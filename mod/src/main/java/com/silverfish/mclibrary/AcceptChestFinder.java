@@ -77,7 +77,8 @@ public final class AcceptChestFinder {
 
 	private static boolean hasName(ChestBlockEntity chest, String name) {
 		Component custom = chest.getCustomName();
-		return custom != null && custom.getString().strip().equals(name);
+		// "kabul", " KABUL " and "Kabul" all match.
+		return custom != null && custom.getString().strip().equalsIgnoreCase(name);
 	}
 
 	/** Returns the combined inventory for a double chest, the chest itself otherwise (may be null). */
